@@ -3174,19 +3174,20 @@ class Device(TreeNode): # HINT: Device begin
         debug = 0
     gtkThread = None
 
+    def dprint(self, debuglevel, fmt, *args):
+        if debuglevel > self.debug:
+            return
+        now = _time.time()
+        line = str(fmt) if not args else (fmt % args)
+        _sys.stdout.write('%.3f: [%s] %s\n' % (now, self, line))
+        _sys.stdout.flush()
+
     """ debug safe import """
     if debug == 0:
-        def dprint(self, debuglevel, fmt, *args): pass
         @staticmethod
         def _debugDevice(device): return device
     else:
-        def dprint(self, debuglevel, fmt, *args):
-            if debuglevel > self.debug:
-                return
-            now = _time.time()
-            line = str(fmt) if not args else (fmt % args)
-            _sys.stdout.write('%.3f: [%s] %s\n' % (now, self, line))
-            _sys.stdout.flush()
+
         if debug < 0:
             @staticmethod
             def _debugDevice(dev):
