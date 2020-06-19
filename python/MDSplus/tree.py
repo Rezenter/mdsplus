@@ -3454,7 +3454,10 @@ If you did intend to write to a subnode of the device you should check the prope
         glob['path'] = head.path
         glob['head'] = head
         for elt in cls.parts:  # first add all nodes
-            node=head.addNode(elt['path'],elt['type'])
+            try:
+                head.addNode(elt['path'],elt.get('type', 'none'))
+            except Exception as e:
+                raise Exception(elt, e)
         for elt in cls.parts:  # then you can reference them in valueExpr
             try:
                 node=head.getNode(elt['path'])
@@ -3468,9 +3471,8 @@ If you did intend to write to a subnode of the device you should check the prope
                 if 'options' in elt:
                     for option in elt['options']:
                         node.__setattr__(option,True)
-            except:
-                _sys.stderr.write('ERROR: %s\n'%str(elt))
-                raise
+            except Exception as e:
+                raise Exception(elt, e)
         _TreeShr._TreeEndConglomerate(tree.ctx)
         return head
 
@@ -3633,7 +3635,10 @@ If you did intend to write to a subnode of the device you should check the prope
                     except KeyError: pass
             return cls.importPyDeviceClass(model)
         MODEL = model.upper()
-        module = __import__(module)
+        try:
+            module = __import__(module)
+        except:
+            raise _exc.DevPYDEVICE_NOT_FOUND
         if module is None:
             raise _exc.DevPYDEVICE_NOT_FOUND
         cls_list = [v for k,v in module.__dict__.items()
