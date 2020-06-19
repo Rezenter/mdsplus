@@ -2652,9 +2652,9 @@ class MAKE_RANGE(_dat.TreeRefX,Function):
     def __init__(self,*args):
         if len(args)==1 and args[0] is self: return
         if len(args)==1 and isinstance(args,(slice,)):
-            super(BUILD_RANGE,self).__init__(args[0].start,args[0].stop,args[0].step)
+            super(MAKE_RANGE,self).__init__(args[0].start,args[0].stop,args[0].step)
         else:
-            super(BUILD_RANGE,self).__init__(*args)
+            super(MAKE_RANGE,self).__init__(*args)
 
 class MAKE_ROUTINE(_dat.TreeRef,Function):
     opcode = 430
